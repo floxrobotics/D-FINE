@@ -1,6 +1,6 @@
 <!--# [D-FINE: Redefine Regression Task of DETRs as Fine-grained Distribution Refinement](https://arxiv.org/abs/xxxxxx) -->
 
-[English](README.md) | 简体中文 | [English Blog](src/zoo/dfine/blog.md) | [中文博客](src/zoo/dfine/blog_cn.md)
+[English](README.md) | 简体中文 | [日本語](README_ja.md) | [English Blog](src/zoo/dfine/blog.md) | [中文博客](src/zoo/dfine/blog_cn.md)
 
 <h2 align="center">
   D-FINE: Redefine Regression Task of DETRs as Fine&#8209;grained&nbsp;Distribution&nbsp;Refinement
@@ -22,8 +22,11 @@
     <a href="https://arxiv.org/abs/2410.13842">
         <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2410.13842-red">
     </a>
-    <a href="mailto: pengyansong@mail.ustc.edu.cn">
+<!--     <a href="mailto: pengyansong@mail.ustc.edu.cn">
         <img alt="email" src="https://img.shields.io/badge/contact_me-email-yellow">
+    </a> -->
+      <a href="https://results.pre-commit.ci/latest/github/Peterande/D-FINE/master">
+        <img alt="pre-commit.ci status" src="https://results.pre-commit.ci/badge/github/Peterande/D-FINE/master.svg">
     </a>
     <a href="https://github.com/Peterande/D-FINE">
         <img alt="stars" src="https://img.shields.io/github/stars/Peterande/D-FINE">
@@ -60,52 +63,69 @@
 
 D-FINE 是一个强大的实时目标检测器，将 DETR 中的边界框回归任务重新定义为了细粒度的分布优化（FDR），并引入全局最优的定位自蒸馏（GO-LSD），在不增加额外推理和训练成本的情况下，实现了卓越的性能。
 
+<details open>
+<summary> 视频 </summary>
+
+我们分别使用 D-FINE 和 YOLO11 对 [YouTube](https://www.youtube.com/watch?v=CfhEWj9sd9A) 上的一段复杂街景视频进行了目标检测。尽管存在逆光、虚化模糊和密集遮挡等不利因素，D-FINE-X 依然成功检测出几乎所有目标，包括背包、自行车和信号灯等难以察觉的小目标，其置信度、以及模糊边缘的定位准确度明显高于 YOLO11x。
+
+https://github.com/user-attachments/assets/e5933d8e-3c8a-400e-870b-4e452f5321d9
+
+</details>
+
 ## 🚀 Updates
 - [x] **\[2024.10.18\]** 发布 D-FINE 系列。
-<!-- - 🔜 **\[Next\]** Release D-FINE series pretrained on Objects365. -->
-
+- [x] **\[2024.10.25\]** 添加了自定义数据集微调配置文件 ([#7](https://github.com/Peterande/D-FINE/issues/7))。
+- [x] **\[2024.10.30\]** 更新 D-FINE-L (E25) 预训练模型，性能提升了 2.0%。
+- [x] **\[2024.11.07\]** 发布 **D-FINE-N**, 在 COCO 上达到 42.8% AP<sup>val</sup> @ 472 FPS<sup>T4</sup>!
 
 ## 模型库
 
 ### COCO
-| 模型 | 数据集 | AP<sup>val</sup> | 参数量 | 时延 (ms) | GFLOPs | 配置 | 权重 | 日志 | 
+| 模型 | 数据集 | AP<sup>val</sup> | 参数量 | 时延 (ms) | GFLOPs | 配置 | 权重 | 日志 |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | COCO | **48.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/dfine_hgnetv2_s_coco.yml) | [48.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_s_coco_log.txt)
-**D-FINE-M** | COCO | **52.3** | 19M | 5.62ms | 57 | [yml](./configs/dfine/dfine_hgnetv2_m_coco.yml) | [52.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_m_coco_log.txt)
-**D-FINE-L** | COCO | **54.0** | 31M | 8.07ms | 91 | [yml](./configs/dfine/dfine_hgnetv2_l_coco.yml) | [54.0](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_l_coco_log.txt)
-**D-FINE-X** | COCO | **55.8** | 62M | 12.89ms | 202 | [yml](./configs/dfine/dfine_hgnetv2_x_coco.yml) | [55.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_x_coco_log.txt)
+**D&#8209;FINE&#8209;N** | COCO | **42.8** | 4M | 2.12ms | 7 | [yml](./configs/dfine/dfine_hgnetv2_n_coco.yml) | [42.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_n_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_n_coco_log.txt)
+**D&#8209;FINE&#8209;S** | COCO | **48.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/dfine_hgnetv2_s_coco.yml) | [48.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_s_coco_log.txt)
+**D&#8209;FINE&#8209;M** | COCO | **52.3** | 19M | 5.62ms | 57 | [yml](./configs/dfine/dfine_hgnetv2_m_coco.yml) | [52.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_m_coco_log.txt)
+**D&#8209;FINE&#8209;L** | COCO | **54.0** | 31M | 8.07ms | 91 | [yml](./configs/dfine/dfine_hgnetv2_l_coco.yml) | [54.0](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_l_coco_log.txt)
+**D&#8209;FINE&#8209;X** | COCO | **55.8** | 62M | 12.89ms | 202 | [yml](./configs/dfine/dfine_hgnetv2_x_coco.yml) | [55.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_x_coco_log.txt)
 
 ### Objects365+COCO
 | 模型 | 数据集 | AP<sup>val</sup> | 参数量 | 时延 (ms) | GFLOPs | 配置 | 权重 | 日志 |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | Objects365+COCO | **50.7** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj2coco.yml) | [50.7](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_s_obj2coco_log.txt)
-**D-FINE-M** | Objects365+COCO | **55.1** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj2coco.yml) | [55.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_m_obj2coco_log.txt)
-**D-FINE-L** | Objects365+COCO | **57.1** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj2coco.yml) | [57.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_l_obj2coco_log.txt)
-**D-FINE-X** | Objects365+COCO | **59.3** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj2coco.yml) | [59.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_x_obj2coco_log.txt)
+**D&#8209;FINE&#8209;S** | Objects365+COCO | **50.7** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj2coco.yml) | [50.7](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_s_obj2coco_log.txt)
+**D&#8209;FINE&#8209;M** | Objects365+COCO | **55.1** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj2coco.yml) | [55.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_m_obj2coco_log.txt)
+**D&#8209;FINE&#8209;L** | Objects365+COCO | **57.3** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj2coco.yml) | [57.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj2coco_e25.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_l_obj2coco_log_e25.txt)
+**D&#8209;FINE&#8209;X** | Objects365+COCO | **59.3** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj2coco.yml) | [59.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_x_obj2coco_log.txt)
 
-<details>
-<summary> 预训练模型 </summary>
+**我们强烈推荐您使用 Objects365 预训练模型进行微调：**
 
-| 模型 | 数据集 | AP<sup>5000</sup> | 参数量 | 时延 (ms) | GFLOPs | 配置 | 权重 | 日志 |
-| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | Objects365 | **30.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj365.yml) | [30.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_s_obj365_log.txt)
-**D-FINE-M** | Objects365 | **37.4** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj365.yml) | [37.4](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_m_obj365_log.txt)
-**D-FINE-L** | Objects365 | **40.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [40.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log.txt)
-**D-FINE-X** | Objects365 | **46.5** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj365.yml) | [46.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_x_obj365_log.txt)
+⚠️ 重要提醒：通常这种预训练模型对复杂场景的理解非常有用。如果您的类别非常简单，请注意，这可能会导致过拟合和次优性能。
 
+<details> <summary><strong> 🔥 Objects365 预训练模型（泛化性最好）</strong></summary>
+
+| 模型 | 数据集 | AP<sup>val</sup> | AP<sup>5000</sup> | 参数量 | 时延 (ms) | GFLOPs | 配置 | 权重 | 日志 |
+| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+**D&#8209;FINE&#8209;S** | Objects365 | **31.0** | **30.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj365.yml) | [30.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_s_obj365_log.txt)
+**D&#8209;FINE&#8209;M** | Objects365 | **38.6** | **37.4** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj365.yml) | [37.4](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_m_obj365_log.txt)
+**D&#8209;FINE&#8209;L** | Objects365 | - | **40.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [40.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log.txt)
+**D&#8209;FINE&#8209;L (E25)** | Objects365 | **44.7** | **42.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [42.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365_e25.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log_e25.txt)
+**D&#8209;FINE&#8209;X** | Objects365 | **49.5** | **46.5** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj365.yml) | [46.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_x_obj365_log.txt)
+- **E25**: 重新训练，并将训练延长至 25 个 epoch。
+- **AP<sup>val</sup>** 是在 *Objects365* 完整的验证集上进行评估的。
+- **AP<sup>5000</sup>** 是在 *Objects365* 验证集的前5000个样本上评估的。
 </details>
 
 **注意：**
-- **AP<sup>val</sup>** 是在 *MSCOCO val2017* 数据集上评估的, **AP<sup>5000</sup>** 是在 *Objects365* 验证集的前5000个样本上评估的。
+- **AP<sup>val</sup>** 是在 *MSCOCO val2017* 数据集上评估的。
 - **时延** 是在单张 T4 GPU 上以 $batch\\_size = 1$, $fp16$, 和 $TensorRT==10.4.0$ 评估的。
-- 表中的 **Objects365+COCO** 表示使用在 *Objects365* 上预训练的权重在 *COCO* 上微调的模型。
+- **Objects365+COCO** 表示使用在 *Objects365* 上预训练的权重在 *COCO* 上微调的模型。
 
 
 
 ## 快速开始
 
 ### 设置
-  
+
 ```shell
 conda create -n dfine python=3.11.9
 conda activate dfine
@@ -120,21 +140,21 @@ pip install -r requirements.txt
 
 
 <details>
-  
+
 <summary> COCO2017 数据集 </summary>
 
-1. 从 [OpenDataLab](https://opendatalab.com/OpenDataLab/COCO_2017) 或者 [COCO](https://cocodataset.org/#download) 下载 COCO2017。 
+1. 从 [OpenDataLab](https://opendatalab.com/OpenDataLab/COCO_2017) 或者 [COCO](https://cocodataset.org/#download) 下载 COCO2017。
 1.修改 [coco_detection.yml](./configs/dataset/coco_detection.yml) 中的路径。
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         img_folder: /data/COCO2017/train2017/
         ann_file: /data/COCO2017/annotations/instances_train2017.json
     val_dataloader:
         img_folder: /data/COCO2017/val2017/
         ann_file: /data/COCO2017/annotations/instances_val2017.json
     ```
-      
+
 </details>
 
 <details>
@@ -206,7 +226,7 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
 8. 修改 [obj365_detection.yml](./configs/dataset/obj365_detection.yml) 中的路径。
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         img_folder: /data/Objects365/data/train
         ann_file: /data/Objects365/data/train/new_zhiyuan_objv2_train_resized.json
     val_dataloader:
@@ -214,6 +234,13 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
         ann_file: /data/Objects365/data/val/new_zhiyuan_objv2_val_resized.json
     ```
 
+
+</details>
+
+<details>
+<summary>CrowdHuman</summary>
+
+在此下载 COCO 格式的数据集：[链接](https://aistudio.baidu.com/datasetdetail/231455)
 
 </details>
 
@@ -276,17 +303,17 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
 
     ```yaml
     task: detection
-    
+
     evaluator:
       type: CocoEvaluator
       iou_types: ['bbox', ]
 
     num_classes: 777 # your dataset classes
     remap_mscoco_category: False
-    
-    train_dataloader: 
+
+    train_dataloader:
       type: DataLoader
-      dataset: 
+      dataset:
         type: CocoDetection
         img_folder: /data/yourdataset/train
         ann_file: /data/yourdataset/train/train.json
@@ -296,25 +323,25 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
           ops: ~
       shuffle: True
       num_workers: 4
-      drop_last: True 
+      drop_last: True
       collate_fn:
-        type: BatchImageCollateFuncion
-    
+        type: BatchImageCollateFunction
+
     val_dataloader:
       type: DataLoader
-      dataset: 
+      dataset:
         type: CocoDetection
         img_folder: /data/yourdataset/val
         ann_file: /data/yourdataset/val/ann.json
         return_masks: False
         transforms:
           type: Compose
-          ops: ~ 
+          ops: ~
       shuffle: False
       num_workers: 4
       drop_last: False
       collate_fn:
-        type: BatchImageCollateFuncion
+        type: BatchImageCollateFunction
     ```
 </details>
 
@@ -326,7 +353,7 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
 <!-- <summary>1. Training </summary> -->
 1. 设置模型
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. 训练
@@ -353,7 +380,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 
 1. 设置模型
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. 在 Objects365 上训练
@@ -379,7 +406,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 
 1. 设置模型
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. 在自定义数据集上训练
@@ -392,8 +419,13 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/custom/dfine_hgnetv2_${model}_custom.yml --test-only -r model.pth
 ```
 
-4. [可选] 修改类映射:
-   
+4. 在自定义数据集上微调
+```shell
+CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/custom/objects365/dfine_hgnetv2_${model}_obj2custom.yml --use-amp --seed=0 -t model.pth
+```
+
+5. **[可选项]** 修改类映射:
+
 在使用 Objects365 预训练权重训练自定义数据集时，示例中假设自定义数据集仅有 `'Person'` 和 `'Car'` 类，您可以将其替换为数据集中对应的任何类别。为了加快收敛，可以在 `src/solver/_solver.py` 中修改 `self.obj365_ids`，如下所示：
 
 ```python
@@ -420,7 +452,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 1. **修改你的 [dataloader.yml](./configs/dfine/include/dataloader.yml)**，增加 `total_batch_size`：
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         total_batch_size: 64  # 原来是 32，现在增加了一倍
     ```
 
@@ -429,17 +461,17 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
     ```yaml
     optimizer:
     type: AdamW
-    params: 
-        - 
+    params:
+        -
         params: '^(?=.*backbone)(?!.*norm|bn).*$'
         lr: 0.000025  # 翻倍，线性缩放原则
-        - 
+        -
         params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn)).*$'
         weight_decay: 0.
 
     lr: 0.0005  # 翻倍，线性缩放原则
     betas: [0.9, 0.999]
-    weight_decay: 0.0000625  # 减半，但可能需要网格搜索找到最优值
+    weight_decay: 0.0001  # 需要网格搜索找到最优值
 
     ema:  # 添加 EMA 设置
         decay: 0.9998  # 根据 1 - (1 - decay) * 2 调整
@@ -451,6 +483,35 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 
 </details>
 
+<details>
+<summary> 自定义输入尺寸 </summary>
+
+如果你想在 COCO2017 上使用 **D-FINE-L** 进行 320x320 尺寸的图片训练，按照以下步骤操作：
+
+1. **修改你的 [dataloader.yml](./configs/dfine/include/dataloader.yml)**：
+
+    ```yaml
+
+    train_dataloader:
+    dataset:
+        transforms:
+            ops:
+                - {type: Resize, size: [320, 320], }
+    collate_fn:
+        base_size: 320
+    dataset:
+        transforms:
+            ops:
+                - {type: Resize, size: [320, 320], }
+    ```
+
+2. **修改你的 [dfine_hgnetv2.yml](./configs/dfine/include/dfine_hgnetv2.yml)**：
+
+    ```yaml
+    eval_spatial_size: [320, 320]
+    ```
+
+</details>
 
 
 ## 工具
@@ -462,7 +523,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 1. 设置
 ```shell
 pip install onnx onnxsim onnxruntime
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. 导出 onnx
@@ -478,22 +539,24 @@ trtexec --onnx="model.onnx" --saveEngine="model.engine" --fp16
 </details>
 
 <details>
-<summary> 推理 </summary>
+<summary> 推理（可视化） </summary>
 
 
 1. 设置
 ```shell
 pip install -r tools/inference/requirements.txt
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 
 <!-- <summary>5. Inference </summary> -->
 2. 推理 (onnxruntime / tensorrt / torch)
+
+目前支持对图像和视频的推理。
 ```shell
-python tools/inference/onnx_inf.py --onnx-file model.onnx --im-file image.jpg
-python tools/inference/trt_inf.py --trt-file model.trt --im-file image.jpg
-python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco.yml -r model.pth --im-file image.jpg --device cuda:0
+python tools/inference/onnx_inf.py --onnx model.onnx --input image.jpg  # video.mp4
+python tools/inference/trt_inf.py --trt model.engine --input image.jpg
+python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco.yml -r model.pth --input image.jpg --device cuda:0
 ```
 </details>
 
@@ -503,7 +566,7 @@ python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco
 1. 设置
 ```shell
 pip install -r tools/benchmark/requirements.txt
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 <!-- <summary>6. Benchmark </summary> -->
@@ -524,7 +587,7 @@ python tools/benchmark/trt_benchmark.py --COCO_dir path/to/COCO2017 --engine_dir
 1. 设置
 ```shell
 pip install fiftyone
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 4. Voxel51 Fiftyone 可视化 ([fiftyone](https://github.com/voxel51/fiftyone))
 ```shell
@@ -548,38 +611,39 @@ python reference/convert_weight.py model.pth
 
 ## 图表与可视化
 
-<details> 
+<details>
 <summary> FDR 和 GO-LSD </summary>
 
 D-FINE与FDR概览。概率分布作为更细粒度的中间表征，通过解码器层以残差方式进行迭代优化。应用非均匀加权函数以实现更精细的定位。
-<p align="center"> 
+<p align="center">
 <img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/fdr-1.jpg" alt="细粒度分布优化过程" width="1000"> </p>
 GO-LSD流程概览。通过DDF损失函数和解耦加权策略将最终层分布中的定位知识蒸馏到前面的层中。
-<p align="center"> <img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/go_lsd-1.jpg" alt="GO-LSD流程" width="1000"> </p> 
+<p align="center"> <img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/go_lsd-1.jpg" alt="GO-LSD流程" width="1000"> </p>
 
-</details> 
+</details>
 
 <details open>
 <summary> 分布可视化 </summary>
 
 FDR在检测场景中的可视化，包括初始和优化后的边界框，以及未加权和加权的分布图。
 
-<p align="center"> 
-<img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/merged_image.jpg" width="1000"> 
-</p> 
+<p align="center">
+<img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/merged_image.jpg" width="1000">
+</p>
 
-</details> 
+</details>
 
-<details> 
+<details>
 <summary> 困难场景 </summary>
 
 以下可视化展示了D-FINE在各种复杂检测场景中的预测结果。这些场景包括遮挡、低光条件、运动模糊、景深效果和密集场景。尽管面临这些挑战，D-FINE依然能够生成准确的定位结果。
 
-<p align="center"> 
-<img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/hard_case-1.jpg" alt="D-FINE在挑战性场景中的预测" width="1000"> 
-</p> 
+<p align="center">
+<img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/hard_case-1.jpg" alt="D-FINE在挑战性场景中的预测" width="1000">
+</p>
 
 </details>
+
 
 <!-- <table><tr>
 <td><img src=https://raw.githubusercontent.com/Peterande/storage/master/figs/merged_image.jpg border=0 width=1000></td>
@@ -592,7 +656,7 @@ FDR在检测场景中的可视化，包括初始和优化后的边界框，以�
 
 ```latex
 @misc{peng2024dfine,
-      title={D-FINE: Redefine Regression Task in DETRs as Fine-grained Distribution Refinement}, 
+      title={D-FINE: Redefine Regression Task in DETRs as Fine-grained Distribution Refinement},
       author={Yansong Peng and Hebei Li and Peixi Wu and Yueyi Zhang and Xiaoyan Sun and Feng Wu},
       year={2024},
       eprint={2410.13842},

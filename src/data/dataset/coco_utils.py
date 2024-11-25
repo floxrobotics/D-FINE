@@ -9,8 +9,8 @@ import torch
 import torch.utils.data
 import torchvision
 import torchvision.transforms.functional as TVF
-from pycocotools import mask as coco_mask
-from pycocotools.coco import COCO
+import faster_coco_eval.core.mask as coco_mask
+from faster_coco_eval import COCO
 
 
 def convert_coco_poly_to_mask(segmentations, height, width):
@@ -137,7 +137,7 @@ def convert_to_coco_api(ds):
 
         img, targets = ds.load_item(img_idx)
         width, height = img.size
-        
+
         image_id = targets["image_id"].item()
         img_dict = {}
         img_dict["id"] = image_id
@@ -190,5 +190,3 @@ def get_coco_api_from_dataset(dataset):
     if isinstance(dataset, torchvision.datasets.CocoDetection):
         return dataset.coco
     return convert_to_coco_api(dataset)
-
-

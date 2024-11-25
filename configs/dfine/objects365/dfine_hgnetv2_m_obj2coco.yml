@@ -30,15 +30,15 @@ HybridEncoder:
 
 optimizer:
   type: AdamW
-  params: 
-    - 
+  params:
+    -
       params: '^(?=.*backbone)(?!.*norm|bn).*$'
       lr: 0.000025
-    - 
+    -
       params: '^(?=.*backbone)(?=.*norm|bn).*$'
       lr: 0.000025
       weight_decay: 0.
-    - 
+    -
       params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn|bias)).*$'
       weight_decay: 0.
 
@@ -48,18 +48,18 @@ optimizer:
 
 
 epoches: 56 # Early stop
-train_dataloader: 
-  dataset: 
+train_dataloader:
+  dataset:
     transforms:
       policy:
         epoch: 48
   collate_fn:
     stop_epoch: 48
     ema_restart_decay: 0.9999
-    scale_ori_repeat: 6
+    base_size_repeat: 6
 
 ema:
   warmups: 0
-  
+
 lr_warmup_scheduler:
   warmup_duration: 0

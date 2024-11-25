@@ -31,31 +31,35 @@ HybridEncoder:
 
 optimizer:
   type: AdamW
-  params: 
-    - 
+  params:
+    -
       params: '^(?=.*backbone)(?!.*norm|bn).*$'
-      lr: 0.0001
-    - 
+      lr: 0.0002
+    -
       params: '^(?=.*backbone)(?=.*norm|bn).*$'
-      lr: 0.0001
+      lr: 0.0002
       weight_decay: 0.
-    - 
+    -
       params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn|bias)).*$'
       weight_decay: 0.
 
-  lr: 0.0002
+  lr: 0.0004
   betas: [0.9, 0.999]
   weight_decay: 0.0001
 
 
 # Increase to search for the optimal ema
-epoches: 132 # 120 + 4n
-train_dataloader: 
-  dataset: 
+epoches: 220
+train_dataloader:
+  total_batch_size: 64
+  dataset:
     transforms:
       policy:
-        epoch: 120
+        epoch: 200
   collate_fn:
-    stop_epoch: 120
+    stop_epoch: 200
     ema_restart_decay: 0.9999
-    scale_ori_repeat: 20
+    base_size_repeat: 20
+
+val_dataloader:
+  total_batch_size: 128

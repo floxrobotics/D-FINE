@@ -3,13 +3,12 @@ Copied from RT-DETR (https://github.com/lyuwenyu/RT-DETR)
 Copyright(c) 2023 lyuwenyu. All Rights Reserved.
 """
 
-import torch 
+import torch
 import torch.utils.data as data
 import torch.nn.functional as F
 from torch.utils.data import default_collate
 
 import torchvision
-torchvision.disable_beta_transforms_warning()
 import torchvision.transforms.v2 as VT
 from torchvision.transforms.v2 import functional as VF, InterpolationMode
 
@@ -17,12 +16,13 @@ import random
 from functools import partial
 
 from ..core import register
+torchvision.disable_beta_transforms_warning()
 
 
 __all__ = [
     'DataLoader',
-    'BaseCollateFunction', 
-    'BatchImageCollateFuncion',
+    'BaseCollateFunction',
+    'BatchImageCollateFunction',
     'batch_image_collate_fn'
 ]
 
@@ -40,10 +40,10 @@ class DataLoader(data.DataLoader):
         return format_string
 
     def set_epoch(self, epoch):
-        self._epoch = epoch 
+        self._epoch = epoch
         self.dataset.set_epoch(epoch)
         self.collate_fn.set_epoch(epoch)
-    
+
     @property
     def epoch(self):
         return self._epoch if hasattr(self, '_epoch') else -1
@@ -67,7 +67,7 @@ def batch_image_collate_fn(items):
 
 class BaseCollateFunction(object):
     def set_epoch(self, epoch):
-        self._epoch = epoch 
+        self._epoch = epoch
 
     @property
     def epoch(self):
@@ -77,17 +77,26 @@ class BaseCollateFunction(object):
         raise NotImplementedError('')
 
 
+def generate_scales(base_size, base_size_repeat):
+    scale_repeat = (base_size - int(base_size * 0.75 / 32) * 32) // 32
+    scales = [int(base_size * 0.75 / 32) * 32 + i * 32 for i in range(scale_repeat)]
+    scales += [base_size] * base_size_repeat
+    scales += [int(base_size * 1.25 / 32) * 32 - i * 32 for i in range(scale_repeat)]
+    return scales
+
+
 @register()
-class BatchImageCollateFuncion(BaseCollateFunction):
+class BatchImageCollateFunction(BaseCollateFunction):
     def __init__(
-        self, 
-        scales=None, 
-        stop_epoch=None, 
+        self,
+        stop_epoch=None,
         ema_restart_decay=0.9999,
-        scale_ori_repeat=3,
+        base_size=640,
+        base_size_repeat=None,
     ) -> None:
         super().__init__()
-        self.scales = scales + [640] * scale_ori_repeat if scales is not None else scales
+        self.base_size = base_size
+        self.scales = generate_scales(base_size, base_size_repeat) if base_size_repeat is not None else None
         self.stop_epoch = stop_epoch if stop_epoch is not None else 100000000
         self.ema_restart_decay = ema_restart_decay
         # self.interpolation = interpolation
@@ -109,4 +118,3 @@ class BatchImageCollateFuncion(BaseCollateFunction):
                 raise NotImplementedError('')
 
         return images, targets
-

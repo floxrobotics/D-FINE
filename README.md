@@ -1,6 +1,6 @@
 <!--# [D-FINE: Redefine Regression Task of DETRs as Fine-grained Distribution Refinement](https://arxiv.org/abs/xxxxxx) -->
 
-English | [简体中文](README_cn.md) | [English Blog](src/zoo/dfine/blog.md) | [中文博客](src/zoo/dfine/blog_cn.md)
+English | [简体中文](README_cn.md) | [日本語](README_ja.md) | [English Blog](src/zoo/dfine/blog.md) | [中文博客](src/zoo/dfine/blog_cn.md)
 
 <h2 align="center">
   D-FINE: Redefine Regression Task of DETRs as Fine&#8209;grained&nbsp;Distribution&nbsp;Refinement
@@ -21,8 +21,11 @@ English | [简体中文](README_cn.md) | [English Blog](src/zoo/dfine/blog.md) |
     <a href="https://arxiv.org/abs/2410.13842">
         <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2410.13842-red">
     </a>
-    <a href="mailto: pengyansong@mail.ustc.edu.cn">
+<!--     <a href="mailto: pengyansong@mail.ustc.edu.cn">
         <img alt="email" src="https://img.shields.io/badge/contact_me-email-yellow">
+    </a> -->
+      <a href="https://results.pre-commit.ci/latest/github/Peterande/D-FINE/master">
+        <img alt="pre-commit.ci status" src="https://results.pre-commit.ci/badge/github/Peterande/D-FINE/master.svg">
     </a>
     <a href="https://github.com/Peterande/D-FINE">
         <img alt="stars" src="https://img.shields.io/github/stars/Peterande/D-FINE">
@@ -69,47 +72,65 @@ University of Science and Technology of China
 
 D-FINE is a powerful real-time object detector that redefines the bounding box regression task in DETRs as Fine-grained Distribution Refinement (FDR) and introduces Global Optimal Localization Self-Distillation (GO-LSD), achieving outstanding performance without introducing additional inference and training costs.
 
+<details open>
+<summary> Video </summary>
+
+We conduct object detection using D-FINE and YOLO11 on a complex street scene video from [YouTube](https://www.youtube.com/watch?v=CfhEWj9sd9A). Despite challenging conditions such as backlighting, motion blur, and dense crowds, D-FINE-X successfully detects nearly all targets, including subtle small objects like backpacks, bicycles, and traffic lights. Its confidence scores and the localization precision for blurred edges are significantly higher than those of YOLO11.
+
+<!-- We use D-FINE and YOLO11 on a street scene video from [YouTube](https://www.youtube.com/watch?v=CfhEWj9sd9A). Despite challenges like backlighting, motion blur, and dense crowds, D-FINE-X outperforms YOLO11x, detecting more objects with higher confidence and better precision. -->
+
+https://github.com/user-attachments/assets/e5933d8e-3c8a-400e-870b-4e452f5321d9
+
+</details>
+
 ## 🚀 Updates
 - [x] **\[2024.10.18\]** Release D-FINE series.
-<!-- - 🔜 **\[Next\]** Release D-FINE series pretrained on Objects365. -->
-
+- [x] **\[2024.10.25\]** Add custom dataset finetuning configs ([#7](https://github.com/Peterande/D-FINE/issues/7)).
+- [x] **\[2024.10.30\]** Update D-FINE-L (E25) pretrained model, with performance improved by 2.0%.
+- [x] **\[2024.11.07\]** Release **D-FINE-N**, achiving 42.8% AP<sup>val</sup> on COCO @ 472 FPS<sup>T4</sup>!
 
 ## Model Zoo
 
 ### COCO
 | Model | Dataset | AP<sup>val</sup> | #Params | Latency | GFLOPs | config | checkpoint | logs |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | COCO | **48.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/dfine_hgnetv2_s_coco.yml) | [48.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_s_coco_log.txt)
-**D-FINE-M** | COCO | **52.3** | 19M | 5.62ms | 57 | [yml](./configs/dfine/dfine_hgnetv2_m_coco.yml) | [52.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_m_coco_log.txt)
-**D-FINE-L** | COCO | **54.0** | 31M | 8.07ms | 91 | [yml](./configs/dfine/dfine_hgnetv2_l_coco.yml) | [54.0](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_l_coco_log.txt)
-**D-FINE-X** | COCO | **55.8** | 62M | 12.89ms | 202 | [yml](./configs/dfine/dfine_hgnetv2_x_coco.yml) | [55.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_x_coco_log.txt)
+**D&#8209;FINE&#8209;N** | COCO | **42.8** | 4M | 2.12ms | 7 | [yml](./configs/dfine/dfine_hgnetv2_n_coco.yml) | [42.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_n_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_n_coco_log.txt)
+**D&#8209;FINE&#8209;S** | COCO | **48.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/dfine_hgnetv2_s_coco.yml) | [48.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_s_coco_log.txt)
+**D&#8209;FINE&#8209;M** | COCO | **52.3** | 19M | 5.62ms | 57 | [yml](./configs/dfine/dfine_hgnetv2_m_coco.yml) | [52.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_m_coco_log.txt)
+**D&#8209;FINE&#8209;L** | COCO | **54.0** | 31M | 8.07ms | 91 | [yml](./configs/dfine/dfine_hgnetv2_l_coco.yml) | [54.0](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_l_coco_log.txt)
+**D&#8209;FINE&#8209;X** | COCO | **55.8** | 62M | 12.89ms | 202 | [yml](./configs/dfine/dfine_hgnetv2_x_coco.yml) | [55.8](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/coco/dfine_x_coco_log.txt)
 
 
 ### Objects365+COCO
 | Model | Dataset | AP<sup>val</sup> | #Params | Latency | GFLOPs | config | checkpoint | logs |
 | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | Objects365+COCO | **50.7** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj2coco.yml) | [50.7](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_s_obj2coco_log.txt)
-**D-FINE-M** | Objects365+COCO | **55.1** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj2coco.yml) | [55.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_m_obj2coco_log.txt)
-**D-FINE-L** | Objects365+COCO | **57.1** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj2coco.yml) | [57.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_l_obj2coco_log.txt)
-**D-FINE-X** | Objects365+COCO | **59.3** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj2coco.yml) | [59.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_x_obj2coco_log.txt)
+**D&#8209;FINE&#8209;S** | Objects365+COCO | **50.7** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj2coco.yml) | [50.7](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_s_obj2coco_log.txt)
+**D&#8209;FINE&#8209;M** | Objects365+COCO | **55.1** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj2coco.yml) | [55.1](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_m_obj2coco_log.txt)
+**D&#8209;FINE&#8209;L** | Objects365+COCO | **57.3** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj2coco.yml) | [57.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj2coco_e25.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_l_obj2coco_log_e25.txt)
+**D&#8209;FINE&#8209;X** | Objects365+COCO | **59.3** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj2coco.yml) | [59.3](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj2coco.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj2coco/dfine_x_obj2coco_log.txt)
 
+**We highly recommend that you use the Objects365 pre-trained model for fine-tuning:**
+
+⚠️ **Important**: Please note that this is generally beneficial for complex scene understanding. If your categories are very simple, it might lead to overfitting and suboptimal performance.
 <details>
-<summary> Pretrained Models </summary>
+<summary><strong> 🔥 Pretrained Models on Objects365 (Best generalization) </strong></summary>
 
-| Model | Dataset | AP<sup>5000</sup> | #Params | Latency | GFLOPs | config | checkpoint | logs |
-| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
-**D-FINE-S** | Objects365 | **30.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj365.yml) | [30.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_s_obj365_log.txt)
-**D-FINE-M** | Objects365 | **37.4** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj365.yml) | [37.4](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_m_obj365_log.txt)
-**D-FINE-L** | Objects365 | **40.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [40.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log.txt)
-**D-FINE-X** | Objects365 | **46.5** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj365.yml) | [46.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_x_obj365_log.txt)
-
+| Model | Dataset | AP<sup>val</sup> | AP<sup>5000</sup> | #Params | Latency | GFLOPs | config | checkpoint | logs |
+| :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+**D&#8209;FINE&#8209;S** | Objects365 | **31.0** | **30.5** | 10M | 3.49ms | 25 | [yml](./configs/dfine/objects365/dfine_hgnetv2_s_obj365.yml) | [30.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_s_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_s_obj365_log.txt)
+**D&#8209;FINE&#8209;M** | Objects365 | **38.6** | **37.4** | 19M | 5.62ms | 57 | [yml](./configs/dfine/objects365/dfine_hgnetv2_m_obj365.yml) | [37.4](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_m_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_m_obj365_log.txt)
+**D&#8209;FINE&#8209;L** | Objects365 | - | **40.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [40.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log.txt)
+**D&#8209;FINE&#8209;L (E25)** | Objects365 | **44.7** | **42.6** | 31M | 8.07ms | 91 | [yml](./configs/dfine/objects365/dfine_hgnetv2_l_obj365.yml) | [42.6](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_l_obj365_e25.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_l_obj365_log_e25.txt)
+**D&#8209;FINE&#8209;X** | Objects365 | **49.5** | **46.5** | 62M | 12.89ms | 202 | [yml](./configs/dfine/objects365/dfine_hgnetv2_x_obj365.yml) | [46.5](https://github.com/Peterande/storage/releases/download/dfinev1.0/dfine_x_obj365.pth) | [url](https://raw.githubusercontent.com/Peterande/storage/refs/heads/master/logs/obj365/dfine_x_obj365_log.txt)
+- **E25**: Re-trained and extended the pretraining to 25 epochs.
+- **AP<sup>val</sup>** is evaluated on *Objects365* full validation set.
+- **AP<sup>5000</sup>** is evaluated on the first 5000 samples of the *Objects365* validation set.
 </details>
 
 **Notes:**
-
-- **AP<sup>val</sup>** is evaluated on *MSCOCO val2017* dataset, and **AP<sup>5000</sup>** is evaluated on the first 5000 samples of the *Objects365* validation set.
+- **AP<sup>val</sup>** is evaluated on *MSCOCO val2017* dataset.
 - **Latency** is evaluated on a single T4 GPU with $batch\\_size = 1$, $fp16$, and $TensorRT==10.4.0$.
-- **Objects365+COCO** in the table means finetuned model on *COCO* using pretrained weights trained on *Objects365*.
+- **Objects365+COCO** means finetuned model on *COCO* using pretrained weights trained on *Objects365*.
 
 
 
@@ -129,24 +150,24 @@ pip install -r requirements.txt
 <details>
 <summary> COCO2017 Dataset </summary>
 
-1. Download COCO2017 from [OpenDataLab](https://opendatalab.com/OpenDataLab/COCO_2017) or [COCO](https://cocodataset.org/#download). 
+1. Download COCO2017 from [OpenDataLab](https://opendatalab.com/OpenDataLab/COCO_2017) or [COCO](https://cocodataset.org/#download).
 1. Modify paths in [coco_detection.yml](./configs/dataset/coco_detection.yml)
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         img_folder: /data/COCO2017/train2017/
         ann_file: /data/COCO2017/annotations/instances_train2017.json
     val_dataloader:
         img_folder: /data/COCO2017/val2017/
         ann_file: /data/COCO2017/annotations/instances_val2017.json
     ```
-      
+
 </details>
 
 <details>
 <summary> Objects365 Dataset </summary>
 
-1. Download Objects365 from [OpenDataLab](https://opendatalab.com/OpenDataLab/Objects365). 
+1. Download Objects365 from [OpenDataLab](https://opendatalab.com/OpenDataLab/Objects365).
 
 2. Set the Base Directory:
 ```shell
@@ -210,7 +231,7 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
 8. Modify paths in [obj365_detection.yml](./configs/dataset/obj365_detection.yml)
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         img_folder: /data/Objects365/data/train
         ann_file: /data/Objects365/data/train/new_zhiyuan_objv2_train_resized.json
     val_dataloader:
@@ -218,6 +239,13 @@ python tools/resize_obj365.py --base_dir ${BASE_DIR}
         ann_file: /data/Objects365/data/val/new_zhiyuan_objv2_val_resized.json
     ```
 
+
+</details>
+
+<details>
+<summary>CrowdHuman</summary>
+
+Download COCO format dataset here: [url](https://aistudio.baidu.com/datasetdetail/231455)
 
 </details>
 
@@ -280,17 +308,17 @@ To train on your custom dataset, you need to organize it in the COCO format. Fol
 
     ```yaml
     task: detection
-    
+
     evaluator:
       type: CocoEvaluator
       iou_types: ['bbox', ]
 
     num_classes: 777 # your dataset classes
     remap_mscoco_category: False
-    
-    train_dataloader: 
+
+    train_dataloader:
       type: DataLoader
-      dataset: 
+      dataset:
         type: CocoDetection
         img_folder: /data/yourdataset/train
         ann_file: /data/yourdataset/train/train.json
@@ -300,25 +328,25 @@ To train on your custom dataset, you need to organize it in the COCO format. Fol
           ops: ~
       shuffle: True
       num_workers: 4
-      drop_last: True 
+      drop_last: True
       collate_fn:
-        type: BatchImageCollateFuncion
-    
+        type: BatchImageCollateFunction
+
     val_dataloader:
       type: DataLoader
-      dataset: 
+      dataset:
         type: CocoDetection
         img_folder: /data/yourdataset/val
         ann_file: /data/yourdataset/val/ann.json
         return_masks: False
         transforms:
           type: Compose
-          ops: ~ 
+          ops: ~
       shuffle: False
       num_workers: 4
       drop_last: False
       collate_fn:
-        type: BatchImageCollateFuncion
+        type: BatchImageCollateFunction
     ```
 
 </details>
@@ -331,7 +359,7 @@ To train on your custom dataset, you need to organize it in the COCO format. Fol
 <!-- <summary>1. Training </summary> -->
 1. Set Model
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. Training
@@ -358,7 +386,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 
 1. Set Model
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. Training on Objects365
@@ -366,7 +394,7 @@ export model=l  # s m l x
 CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/objects365/dfine_hgnetv2_${model}_obj365.yml --use-amp --seed=0
 ```
 
-3. Turning on COCO2017
+3. Tuning on COCO2017
 ```shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/objects365/dfine_hgnetv2_${model}_obj2coco.yml --use-amp --seed=0 -t model.pth
 ```
@@ -384,7 +412,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 
 1. Set Model
 ```shell
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. Training on Custom Dataset
@@ -397,15 +425,20 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 trai
 CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/custom/dfine_hgnetv2_${model}_custom.yml --test-only -r model.pth
 ```
 
-4. [Optional] Modify Class Mappings:
-   
+4. Tuning on Custom Dataset
+```shell
+CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --master_port=7777 --nproc_per_node=4 train.py -c configs/dfine/custom/objects365/dfine_hgnetv2_${model}_obj2custom.yml --use-amp --seed=0 -t model.pth
+```
+
+5. **[Optional]** Modify Class Mappings:
+
 When using the Objects365 pre-trained weights to train on your custom dataset, the example assumes that your dataset only contains the classes `'Person'` and `'Car'`. For faster convergence, you can modify `self.obj365_ids` in `src/solver/_solver.py` as follows:
 
 
 ```python
 self.obj365_ids = [0, 5]  # Person, Cars
 ```
-You can replace these with any corresponding classes from your dataset. The list of Objects365 classes with their corresponding IDs: 
+You can replace these with any corresponding classes from your dataset. The list of Objects365 classes with their corresponding IDs:
 https://github.com/Peterande/D-FINE/blob/352a94ece291e26e1957df81277bef00fe88a8e3/src/solver/_solver.py#L330
 
 New training command:
@@ -428,7 +461,7 @@ For example, if you want to double the total batch size when training D-FINE-L o
 1. **Modify your [dataloader.yml](./configs/dfine/include/dataloader.yml)** to increase the `total_batch_size`:
 
     ```yaml
-    train_dataloader: 
+    train_dataloader:
         total_batch_size: 64  # Previously it was 32, now doubled
     ```
 
@@ -437,17 +470,17 @@ For example, if you want to double the total batch size when training D-FINE-L o
     ```yaml
     optimizer:
     type: AdamW
-    params: 
-        - 
+    params:
+        -
         params: '^(?=.*backbone)(?!.*norm|bn).*$'
         lr: 0.000025  # doubled, linear scaling law
-        - 
+        -
         params: '^(?=.*(?:encoder|decoder))(?=.*(?:norm|bn)).*$'
         weight_decay: 0.
 
     lr: 0.0005  # doubled, linear scaling law
     betas: [0.9, 0.999]
-    weight_decay: 0.0000625  # halved, probably need a grid search
+    weight_decay: 0.0001  # need a grid search
 
     ema:  # added EMA settings
         decay: 0.9998  # adjusted by 1 - (1 - decay) * 2
@@ -460,6 +493,36 @@ For example, if you want to double the total batch size when training D-FINE-L o
 </details>
 
 
+<details>
+<summary> Customizing Input Size </summary>
+
+If you'd like to train **D-FINE-L** on COCO2017 with an input size of 320x320, follow these steps:
+
+1. **Modify your [dataloader.yml](./configs/dfine/include/dataloader.yml)**:
+
+    ```yaml
+
+    train_dataloader:
+    dataset:
+        transforms:
+            ops:
+                - {type: Resize, size: [320, 320], }
+    collate_fn:
+        base_size: 320
+    dataset:
+        transforms:
+            ops:
+                - {type: Resize, size: [320, 320], }
+    ```
+
+2. **Modify your [dfine_hgnetv2.yml](./configs/dfine/include/dfine_hgnetv2.yml)**:
+
+    ```yaml
+    eval_spatial_size: [320, 320]
+    ```
+
+</details>
+
 ## Tools
 <details>
 <summary> Deployment </summary>
@@ -468,7 +531,7 @@ For example, if you want to double the total batch size when training D-FINE-L o
 1. Setup
 ```shell
 pip install onnx onnxsim
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 2. Export onnx
@@ -484,22 +547,24 @@ trtexec --onnx="model.onnx" --saveEngine="model.engine" --fp16
 </details>
 
 <details>
-<summary> Inference </summary>
+<summary> Inference (Visualization) </summary>
 
 
 1. Setup
 ```shell
 pip install -r tools/inference/requirements.txt
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 
 <!-- <summary>5. Inference </summary> -->
 2. Inference (onnxruntime / tensorrt / torch)
+
+Inference on images and videos is now supported.
 ```shell
-python tools/inference/onnx_inf.py --onnx-file model.onnx --im-file image.jpg
-python tools/inference/trt_inf.py --trt-file model.trt --im-file image.jpg
-python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco.yml -r model.pth --im-file image.jpg --device cuda:0
+python tools/inference/onnx_inf.py --onnx model.onnx --input image.jpg  # video.mp4
+python tools/inference/trt_inf.py --trt model.engine --input image.jpg
+python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco.yml -r model.pth --input image.jpg --device cuda:0
 ```
 </details>
 
@@ -509,7 +574,7 @@ python tools/inference/torch_inf.py -c configs/dfine/dfine_hgnetv2_${model}_coco
 1. Setup
 ```shell
 pip install -r tools/benchmark/requirements.txt
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 
 <!-- <summary>6. Benchmark </summary> -->
@@ -530,7 +595,7 @@ python tools/benchmark/trt_benchmark.py --COCO_dir path/to/COCO2017 --engine_dir
 1. Setup
 ```shell
 pip install fiftyone
-export model=l  # s m l x
+export model=l  # n s m l x
 ```
 4. Voxel51 Fiftyone Visualization ([fiftyone](https://github.com/voxel51/fiftyone))
 ```shell
@@ -597,7 +662,6 @@ The following visualization demonstrates D-FINE's predictions in various complex
 </details>
 
 
-
 <!-- <div style="display: flex; flex-wrap: wrap; justify-content: center; margin: 0; padding: 0;">
     <img src="https://raw.githubusercontent.com/Peterande/storage/master/figs/merged_image.jpg" style="width:99.96%; margin: 0; padding: 0;" />
 </div>
@@ -616,7 +680,7 @@ If you use `D-FINE` or its methods in your work, please cite the following BibTe
 
 ```latex
 @misc{peng2024dfine,
-      title={D-FINE: Redefine Regression Task in DETRs as Fine-grained Distribution Refinement}, 
+      title={D-FINE: Redefine Regression Task in DETRs as Fine-grained Distribution Refinement},
       author={Yansong Peng and Hebei Li and Peixi Wu and Yueyi Zhang and Xiaoyan Sun and Feng Wu},
       year={2024},
       eprint={2410.13842},

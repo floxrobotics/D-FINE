@@ -6,11 +6,11 @@ Modified from RT-DETR (https://github.com/lyuwenyu/RT-DETR)
 Copyright (c) 2023 lyuwenyu. All Rights Reserved.
 """
 
-import time 
+import time
 import json
 import datetime
 
-import torch 
+import torch
 
 from ..misc import dist_utils, stats
 
@@ -19,7 +19,7 @@ from .det_engine import train_one_epoch, evaluate
 
 
 class DetSolver(BaseSolver):
-    
+
     def fit(self, ):
         self.train()
         args = self.cfg
@@ -27,8 +27,25 @@ class DetSolver(BaseSolver):
         n_parameters, model_stats = stats(self.cfg)
         print(model_stats)
         print("-"*42 + "Start training" + "-"*43)
+        top1 = 0
         best_stat = {'epoch': -1, }
+        if self.last_epoch > 0:
+            module = self.ema.module if self.ema else self.model
+            test_stats, coco_evaluator = evaluate(
+                module,
+                self.criterion,
+                self.postprocessor,
+                self.val_dataloader,
+                self.evaluator,
+                self.device
+            )
+            for k in test_stats:
+                best_stat['epoch'] = self.last_epoch
+                best_stat[k] = test_stats[k][0]
+                top1 = test_stats[k][0]
+                print(f'best_stat: {best_stat}')
 
+        best_stat_print = best_stat.copy()
         start_time = time.time()
         start_epoch = self.last_epoch + 1
         for epoch in range(start_epoch, args.epoches):
@@ -37,30 +54,30 @@ class DetSolver(BaseSolver):
             # self.train_dataloader.dataset.set_epoch(epoch)
             if dist_utils.is_dist_available_and_initialized():
                 self.train_dataloader.sampler.set_epoch(epoch)
-            
+
             if epoch == self.train_dataloader.collate_fn.stop_epoch:
-                self.load_resume_state(str(self.output_dir / 'best.pth'))
+                self.load_resume_state(str(self.output_dir / 'best_stg1.pth'))
                 self.ema.decay = self.train_dataloader.collate_fn.ema_restart_decay
                 print(f'Refresh EMA at epoch {epoch} with decay {self.ema.decay}')
-                
+
             train_stats = train_one_epoch(
-                self.model, 
-                self.criterion, 
-                self.train_dataloader, 
-                self.optimizer, 
-                self.device, 
-                epoch, 
-                max_norm=args.clip_max_norm, 
-                print_freq=args.print_freq, 
-                ema=self.ema, 
-                scaler=self.scaler, 
+                self.model,
+                self.criterion,
+                self.train_dataloader,
+                self.optimizer,
+                self.device,
+                epoch,
+                max_norm=args.clip_max_norm,
+                print_freq=args.print_freq,
+                ema=self.ema,
+                scaler=self.scaler,
                 lr_warmup_scheduler=self.lr_warmup_scheduler,
                 writer=self.writer
             )
 
             if self.lr_warmup_scheduler is None or self.lr_warmup_scheduler.finished():
                 self.lr_scheduler.step()
-            
+
             self.last_epoch += 1
 
             if self.output_dir and epoch < self.train_dataloader.collate_fn.stop_epoch:
@@ -73,20 +90,20 @@ class DetSolver(BaseSolver):
 
             module = self.ema.module if self.ema else self.model
             test_stats, coco_evaluator = evaluate(
-                module, 
-                self.criterion, 
-                self.postprocessor, 
-                self.val_dataloader, 
-                self.evaluator, 
+                module,
+                self.criterion,
+                self.postprocessor,
+                self.val_dataloader,
+                self.evaluator,
                 self.device
             )
 
-            # TODO 
+            # TODO
             for k in test_stats:
                 if self.writer and dist_utils.is_main_process():
                     for i, v in enumerate(test_stats[k]):
                         self.writer.add_scalar(f'Test/{k}_{i}'.format(k), v, epoch)
-                
+
                 if k in best_stat:
                     best_stat['epoch'] = epoch if test_stats[k][0] > best_stat[k] else best_stat['epoch']
                     best_stat[k] = max(best_stat[k], test_stats[k][0])
@@ -94,19 +111,33 @@ class DetSolver(BaseSolver):
                     best_stat['epoch'] = epoch
                     best_stat[k] = test_stats[k][0]
 
+                if best_stat[k] > top1:
+                    best_stat_print['epoch'] = epoch
+                    top1 = best_stat[k]
+                    if self.output_dir:
+                        if epoch >= self.train_dataloader.collate_fn.stop_epoch:
+                            dist_utils.save_on_master(self.state_dict(), self.output_dir / 'best_stg2.pth')
+                        else:
+                            dist_utils.save_on_master(self.state_dict(), self.output_dir / 'best_stg1.pth')
+
+                best_stat_print[k] = max(best_stat[k], top1)
+                print(f'best_stat: {best_stat_print}')  # global best
+
                 if best_stat['epoch'] == epoch and self.output_dir:
                     if epoch >= self.train_dataloader.collate_fn.stop_epoch:
-                        dist_utils.save_on_master(self.state_dict(), self.output_dir / f"finetune_{self.ema.decay:.4f}_{best_stat[k]:.4f}.pth")
+                        if test_stats[k][0] > top1:
+                            top1 = test_stats[k][0]
+                            dist_utils.save_on_master(self.state_dict(), self.output_dir / 'best_stg2.pth')
                     else:
-                        dist_utils.save_on_master(self.state_dict(), self.output_dir / 'best.pth')
-                        
+                        top1 = max(test_stats[k][0], top1)
+                        dist_utils.save_on_master(self.state_dict(), self.output_dir / 'best_stg1.pth')
+
                 elif epoch >= self.train_dataloader.collate_fn.stop_epoch:
-                    best_stat['epoch'] = -1
+                    best_stat = {'epoch': -1, }
                     self.ema.decay -= 0.0001
-                    self.load_resume_state(str(self.output_dir / 'best.pth'))
+                    self.load_resume_state(str(self.output_dir / 'best_stg1.pth'))
                     print(f'Refresh EMA at epoch {epoch} with decay {self.ema.decay}')
-                    
-            print(f'best_stat: {best_stat}')
+
 
             log_stats = {
                 **{f'train_{k}': v for k, v in train_stats.items()},
@@ -137,12 +168,12 @@ class DetSolver(BaseSolver):
 
     def val(self, ):
         self.eval()
-        
+
         module = self.ema.module if self.ema else self.model
         test_stats, coco_evaluator = evaluate(module, self.criterion, self.postprocessor,
                 self.val_dataloader, self.evaluator, self.device)
-                
+
         if self.output_dir:
             dist_utils.save_on_master(coco_evaluator.coco_eval["bbox"].eval, self.output_dir / "eval.pth")
-        
+
         return
