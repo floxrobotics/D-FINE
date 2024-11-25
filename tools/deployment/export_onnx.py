@@ -25,7 +25,7 @@ def main(args, ):
         cfg.yaml_cfg['HGNetv2']['pretrained'] = False
 
     if args.resume:
-        checkpoint = torch.load(args.resume, map_location='cpu')
+        checkpoint = torch.load(args.resume, map_location='cuda')
         if 'ema' in checkpoint:
             state = checkpoint['ema']['module']
         else:
