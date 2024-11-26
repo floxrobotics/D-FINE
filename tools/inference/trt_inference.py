@@ -133,7 +133,7 @@ class TRTInference:
         }
 
 
-    def draw_boxes(self, frame, labels, boxes, scores, classes, threshold=0.4):
+    def draw_boxes(self, logger, frame, labels, boxes, scores, classes, threshold=0.6):
         """
         Draw bounding boxes on the frame.
 
@@ -155,7 +155,7 @@ class TRTInference:
         filtered_scores = scores[indices]
         filtered_boxes = boxes[indices]
         filtered_labels = labels[indices]
-
+        logger.debug(f"Filtered values: {filtered_labels}, {filtered_scores}, {filtered_boxes}")
         for i, box in enumerate(filtered_boxes):
             x1, y1, x2, y2 = map(int, box)
             label_idx = int(filtered_labels[i].item())
@@ -163,7 +163,7 @@ class TRTInference:
             score = filtered_scores[i].item()
 
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(frame, f"{label_name} {score:.2f}", (x1, y1 - 10),
+            cv2.putText(frame, f"{label_name} {score:.2f}", (x1, y1+10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
         return frame
