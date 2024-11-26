@@ -111,19 +111,27 @@ class TRTInference:
         Preprocess a single frame for inference.
 
         Args:
-            frame (np.ndarray): Input frame in BGR format.
+            frame (np.ndarray): Input frame in BGR format as a NumPy array.
 
         Returns:
-            dict: Preprocessed frame as a blob.
+            dict: Preprocessed frame as a blob ready for inference.
         """
-        frame_pil = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        w, h = frame_pil.size
-        orig_size = torch.tensor([w, h])[None].to(self.device)
+        # Get the original dimensions of the frame
+        h, w = frame.shape[:2]
+        orig_size = torch.tensor([[w, h]]).to(self.device)
 
-        transforms = T.Compose([T.Resize((640, 640)), T.ToTensor()])
-        im_data = transforms(frame_pil)[None]
+        # Resize the frame to the required input size (640x640) and normalize
+        frame_resized = cv2.resize(frame, (640, 640))
+        frame_normalized = frame_resized.astype(np.float32) / 255.0  # Normalize pixel values to [0, 1]
 
-        return {'images': im_data.to(self.device), 'orig_target_sizes': orig_size}
+        # Convert the frame to a tensor and rearrange dimensions to [C, H, W]
+        frame_tensor = torch.from_numpy(frame_normalized).permute(2, 0, 1).unsqueeze(0).to(self.device)
+
+        return {
+            'images': frame_tensor,
+            'orig_target_sizes': orig_size
+        }
+
 
     def draw_boxes(self, frame, labels, boxes, scores, classes, threshold=0.4):
         """
