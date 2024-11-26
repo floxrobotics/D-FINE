@@ -3,3 +3,4 @@ weight
 output
 input_images
 output_images
+*.pyc
