@@ -1,6 +1,6 @@
 dfine
 weight
-output
+*.onnx
 input_images
 output_images
 *.pyc
