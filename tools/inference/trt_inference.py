@@ -106,6 +106,57 @@ class TRTInference:
         self.context.execute_v2(list(self.bindings_addr.values()))
         return {n: self.bindings[n].data for n in self.output_names}
 
+    def run_inference_batch(self, batched_blob):
+        """
+        Process a batched input (already produced by preprocess_batch) by splitting it into single samples,
+        running inference on each individually using run_inference, and then stacking the results.
+        
+        Args:
+            batched_blob (dict): A dictionary with keys 'images' and 'orig_target_sizes' where:
+                - 'images' is a tensor of shape [B, C, H, W]
+                - 'orig_target_sizes' is a tensor of shape [B, 2]
+        
+        Returns:
+            dict: A dictionary with keys 'scores', 'labels', and 'boxes', where each value is a batched tensor
+                with the first dimension equal to the batch size.
+        """
+        images = batched_blob['images']           # [B, C, H, W]
+        orig_sizes = batched_blob['orig_target_sizes']  # [B, 2]
+        
+        # Unbind the batched tensors along the batch dimension to obtain a list of single-sample tensors.
+        images_list = torch.unbind(images, dim=0)           # List of tensors, each with shape [C, H, W]
+        orig_sizes_list = torch.unbind(orig_sizes, dim=0)     # List of tensors, each with shape [2]
+        
+        scores_list = []
+        labels_list = []
+        boxes_list = []
+        
+        # Process each sample individually.
+        for img, orig_size in zip(images_list, orig_sizes_list):
+            # Create a blob for this single sample by adding back the batch dimension.
+            single_blob = {
+                'images': img.unsqueeze(0),            # Shape becomes [1, C, H, W]
+                'orig_target_sizes': orig_size.unsqueeze(0)  # Shape becomes [1, 2]
+            }
+            # Run inference on this single-sample blob.
+            output = self.run_inference(single_blob)
+            # The output tensors have a batch dimension of 1; extract the 0th element.
+            scores_list.append(output['scores'][0])
+            labels_list.append(output['labels'][0])
+            boxes_list.append(output['boxes'][0])
+        
+        # Stack the outputs along the batch dimension.
+        batched_scores = torch.stack(scores_list, dim=0)
+        batched_labels = torch.stack(labels_list, dim=0)
+        batched_boxes = torch.stack(boxes_list, dim=0)
+        
+        return {
+            'scores': batched_scores,
+            'labels': batched_labels,
+            'boxes': batched_boxes
+        }
+
+
     def preprocess_frame(self, frame):
         """
         Preprocess a single frame for inference.
@@ -132,6 +183,43 @@ class TRTInference:
             'orig_target_sizes': orig_size
         }
 
+    def preprocess_batch(self, frames):
+        """
+        Preprocess a batch of frames for inference.
+        
+        Args:
+            frames (list of np.ndarray): List of input frames in BGR format.
+            
+        Returns:
+            dict: A dictionary with keys 'images' and 'orig_target_sizes', where:
+                - 'images' is a batched tensor of shape [batch_size, C, H, W]
+                - 'orig_target_sizes' is a tensor of shape [batch_size, 2] containing each frame's original width and height.
+        """
+        preprocessed_images = []
+        orig_sizes = []
+        for frame in frames:
+            # Get the original dimensions of the frame
+            h, w = frame.shape[:2]
+            orig_size = torch.tensor([[w, h]], device=self.device)
+            orig_sizes.append(orig_size)
+            
+            # Resize the frame to the required input size (640x640) and normalize
+            frame_resized = cv2.resize(frame, (640, 640))
+            frame_normalized = frame_resized.astype(np.float32) / 255.0  # Normalize to [0, 1]
+            
+            # Convert the frame to a tensor and rearrange dimensions to [C, H, W]
+            frame_tensor = torch.from_numpy(frame_normalized).permute(2, 0, 1).unsqueeze(0).to(self.device)
+            preprocessed_images.append(frame_tensor)
+        
+        # Concatenate all preprocessed image tensors along the batch dimension (dim 0)
+        batched_images = torch.cat(preprocessed_images, dim=0)
+        # Similarly, concatenate all original sizes
+        batched_orig_sizes = torch.cat(orig_sizes, dim=0)
+        
+        return {
+            'images': batched_images,
+            'orig_target_sizes': batched_orig_sizes
+        }
 
     def draw_boxes(self, logger, frame, labels, boxes, scores, classes, threshold=0.6):
         """
