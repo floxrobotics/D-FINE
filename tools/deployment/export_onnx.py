@@ -19,16 +19,17 @@ def main(args):
     """main"""
     cfg = YAMLConfig(args.config, resume=args.resume)
 
+    # Disable pretrained weights for HGNetv2 if present.
     if 'HGNetv2' in cfg.yaml_cfg:
         cfg.yaml_cfg['HGNetv2']['pretrained'] = False
 
+    # Load checkpoint if provided.
     if args.resume:
         checkpoint = torch.load(args.resume, map_location='cuda')
         if 'ema' in checkpoint:
             state = checkpoint['ema']['module']
         else:
             state = checkpoint['model']
-        # Load the checkpoint (this loads state on CPU unless moved)
         cfg.model.load_state_dict(state)
     else:
         print('No checkpoint provided; using default initialization...')
@@ -45,22 +46,24 @@ def main(args):
             return outputs
 
     model = Model()
-    # IMPORTANT: Move the model to cuda so that weights are on the same device as inputs.
+    # IMPORTANT: Move the model to GPU so that both weights and inputs are on the same device.
     model = model.cuda()
 
     # ---------------------------------------------------------
     # Prepare example inputs with matching batch dimensions.
-    # Here we choose a batch size B (e.g. B = 4)
+    # Here we choose B = 3 (dummy input) so that the exported model's batch dimension is 3.
+    # The dynamic axes below will then allow any batch size (e.g. 1,2,3,...) at runtime.
     # ---------------------------------------------------------
-    B = 4
-    data = torch.rand(B, 3, 640, 640).cuda()  # shape: [B, 3, 640, 640]
-    size = torch.tensor([[640, 640]] * B, device='cuda')  # shape: [B, 2]
+    B = 3
+    data = torch.rand(B, 3, 640, 640).cuda()          # Shape: [3, 3, 640, 640]
+    size = torch.tensor([[640, 640]] * B, device='cuda')  # Shape: [3, 2]
 
-    # Dry run to ensure forward pass works.
+    # Run a dry forward pass to ensure the model works.
     _ = model(data, size)
 
     # ---------------------------------------------------------
     # Set dynamic axes so that the batch dimension is flexible.
+    # This allows the exported model to accept a different batch size at runtime (e.g., 1, 2, or 3).
     # ---------------------------------------------------------
     dynamic_axes = {
         'images': {0: 'batch_size'},
@@ -70,7 +73,7 @@ def main(args):
     output_file = args.resume.replace('.pth', '.onnx') if args.resume else 'model.onnx'
 
     # ---------------------------------------------------------
-    # Export the model to ONNX with dynamic batch dimension.
+    # Export the model to ONNX with the dynamic batch dimension.
     # ---------------------------------------------------------
     torch.onnx.export(
         model,
@@ -94,7 +97,10 @@ def main(args):
         import onnx
         import onnxsim
         dynamic = True
-        input_shapes = {'images': [B, 3, 640, 640], 'orig_target_sizes': [B, 2]} if dynamic else None
+        input_shapes = {
+            'images': [B, 3, 640, 640],
+            'orig_target_sizes': [B, 2]
+        } if dynamic else None
         onnx_model_simplify, check = onnxsim.simplify(output_file, test_input_shapes=input_shapes)
         onnx.save(onnx_model_simplify, output_file)
         print(f'Simplify onnx model {check}...')

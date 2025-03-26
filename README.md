@@ -541,7 +541,11 @@ python tools/deployment/export_onnx.py --check -c configs/dfine/dfine_hgnetv2_${
 
 3. Export [tensorrt](https://docs.nvidia.com/deeplearning/tensorrt/install-guide/index.html)
 ```shell
-trtexec --onnx="model.onnx" --saveEngine="model.engine" --fp16
+trtexec --onnx="best_stg2.onnx" --saveEngine="best_stg2.engine" --fp16 \
+  --minShapes=images:1x3x640x640,orig_target_sizes:1x2 \
+  --optShapes=images:2x3x640x640,orig_target_sizes:2x2 \
+  --maxShapes=images:3x3x640x640,orig_target_sizes:3x2
+
 ```
 
 </details>
